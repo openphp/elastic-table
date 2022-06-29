@@ -1,19 +1,28 @@
 {
   "name": "openphp/elastic-table",
-  "autoload": {
-    "psr-4": {
-      "Openphp\\ElasticTable\\": "src/"
-    }
-  },
+  "type": "library",
+  "license": "Apache-2.0",
+  "description": "elastic mysql table",
   "authors": [
     {
       "name": "wangzhiqiang",
       "email": "zhiqiangwang@aliyun.com"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "Openphp\\ElasticTable\\": "src/"
+    }
+  },
   "require": {
     "php": ">7.2",
     "ext-pdo": "*",
     "ext-mbstring": "*"
+  },
+  "scripts": {
+    "fresh": [
+      "rm -rf vendor composer.lock",
+      "composer update"
+    ]
   }
 }
