@@ -66,6 +66,16 @@ class ElasticTable
 
 
     /**
+     * @return $this
+     */
+    public function continueArray()
+    {
+        $this->continueArray = false;
+        return $this;
+    }
+
+
+    /**
      * @return bool|mixed
      */
     public function check()
