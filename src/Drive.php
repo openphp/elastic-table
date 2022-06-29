@@ -7,10 +7,9 @@ namespace Openphp\ElasticTable;
 abstract class Drive
 {
     /**
-     * @var array
+     * @var mixed
      */
-    protected $config = [];
-
+    protected $connect;
     /**
      * @var array
      */
@@ -18,13 +17,13 @@ abstract class Drive
 
     /**
      * Drive constructor.
-     * @param array $config
+     * @param $connect
      * @param array $option
      */
-    public function __construct(array $config = [], array $option = [])
+    public function __construct($connect, array $option = [])
     {
-        $this->config = array_merge($this->config, $config);
-        $this->option = array_merge($this->option, $option);
+        $this->connect = $connect;
+        $this->option  = array_merge($this->option, $option);
     }
 
     /**

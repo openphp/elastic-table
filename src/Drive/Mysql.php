@@ -11,24 +11,38 @@ class Mysql extends Drive
     /**
      * @var array
      */
-    protected $config = [
-        'host'     => '127.0.0.1',
-        'port'     => 3306,
-        'dbname'   => 'test',
-        'charset'  => 'utf8mb4',
-        'username' => 'root',
-        'passwd'   => '123456',
-        'options'  => []
-    ];
+//    protected $config = [
+//        'host'     => '127.0.0.1',
+//        'port'     => 3306,
+//        'dbname'   => 'test',
+//        'charset'  => 'utf8mb4',
+//        'username' => 'root',
+//        'passwd'   => '123456',
+//        'options'  => []
+//    ];
 
     /**
      * @return PDO
      */
     public function connect()
     {
-        return new PDO('mysql:host=' . $this->config['host'] . ';port=' . $this->config['port'] . ';dbname=' . $this->config['dbname'] . ';charset=' . $this->config['charset'],
-            $this->config['username'],
-            $this->config['passwd']);
+        if (is_subclass_of($this->connect, PDO::class)) {
+            return $this->connect;
+        }
+        if (!isset($this->connect['host'])
+            || !isset($this->connect['dbname'])
+            || !isset($this->connect['username'])
+            || !isset($this->connect['passwd'])
+        ) {
+            throw new \PDOException;
+        }
+        return new PDO('mysql:host='
+            . ($this->connect['host'] ?? '127.0.0.1')
+            . ';port=' . ($this->connect['port'] ?? 3306)
+            . ';dbname=' . $this->connect['dbname']
+            . ';charset=' . ($this->connect['charset'] ?? 'utf8mb4'),
+            $this->connect['username'],
+            $this->connect['passwd']);
     }
 
 
