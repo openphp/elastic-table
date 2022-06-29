@@ -44,7 +44,7 @@ class ElasticTable
      */
     public function dataOne(array $data)
     {
-        $this->data([0 => $data]);
+        $this->datas([0 => $data]);
         return $this;
     }
 
@@ -61,12 +61,15 @@ class ElasticTable
     /**
      * @return array
      */
-    public function getDataFiledVal()
+    protected function getDataFiledVal()
     {
         $data      = $this->data;
         $filed_len = [];
         foreach ($data as $i => $datum) {
             foreach ($datum as $filed => $val) {
+                if (is_array($val)) {
+                    continue;
+                }
                 $filed_len[$filed][$i] = mb_strlen($val);
             }
         }
@@ -101,9 +104,9 @@ class ElasticTable
     }
 
     /**
-     * @param Drive  $drive
+     * @param Drive $drive
      * @param string $table
-     * @param array  $datas
+     * @param array $datas
      * @return bool|mixed
      */
     public static function checks(Drive $drive, $table, $datas)
