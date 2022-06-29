@@ -1,0 +1,19 @@
+{
+  "name": "openphp/elastic-table",
+  "autoload": {
+    "psr-4": {
+      "Openphp\\ElasticTable\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "wangzhiqiang",
+      "email": "zhiqiangwang@aliyun.com"
+    }
+  ],
+  "require": {
+    "php": ">7.2",
+    "ext-pdo": "*",
+    "ext-mbstring": "*"
+  }
+}
