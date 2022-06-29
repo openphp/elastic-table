@@ -74,11 +74,27 @@ class ElasticTable
         return $this;
     }
 
+    /**
+     * @return void
+     */
+    public function checkForException()
+    {
+        if (!$this->drive->exist($this->table)) {
+            throw new \RuntimeException($this->table . ' table does not exist');
+        }
+        $datasFiledVal = Resault::datasFiledVal($this->datas, $this->continueArray);
+        $dataFileds    = array_keys($datasFiledVal);
+        $dbFileds      = $this->drive->tableFields($this->table);
+        $diff          = array_diff($dataFileds, $dbFileds);
+        if ($diff) {
+            throw new \RuntimeException($this->table . ' Fields are inconsistent');
+        }
+    }
 
     /**
      * @return bool|mixed
      */
-    public function check()
+    public function checkAndUpdate()
     {
         $ret           = true;
         $datasFiledVal = Resault::datasFiledVal($this->datas, $this->continueArray);
@@ -97,16 +113,5 @@ class ElasticTable
             }
         }
         return $ret;
-    }
-
-    /**
-     * @param Drive $drive
-     * @param string $table
-     * @param array $datas
-     * @return bool|mixed
-     */
-    public static function checks(Drive $drive, $table, $datas)
-    {
-        return (new static($drive))->table($table)->datas($datas)->check();
     }
 }

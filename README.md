@@ -33,6 +33,6 @@ $table->table('user')->datas(
             'hight' => 175
         ]
     ]
-)->check();
+)->checkAndUpdate();
 ~~~
 
