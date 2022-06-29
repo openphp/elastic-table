@@ -26,7 +26,7 @@ class Mysql extends Drive
      */
     public function connect()
     {
-        if (is_subclass_of($this->connect, PDO::class)) {
+        if ($this->connect instanceof PDO) {
             return $this->connect;
         }
         if (!isset($this->connect['host'])
@@ -52,8 +52,8 @@ class Mysql extends Drive
      */
     public function exist(string $table)
     {
-        $stmt = $this->connect()->prepare("select * from information_schema.TABLES WHERE TABLE_NAME = :table AND TABLE_SCHEMA = :dbname ;");
-        $stmt->execute(['table' => $table, 'dbname' => $this->config['dbname']]);
+        $stmt = $this->connect()->prepare("select * from information_schema.TABLES WHERE TABLE_NAME = :table ;");
+        $stmt->execute(['table' => $table]);
         if ($stmt->fetch(2) != false) {
             return true;
         }
