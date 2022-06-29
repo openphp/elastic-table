@@ -59,6 +59,8 @@ class Mysql extends Drive
         if ($type == 'integer') {
             if ($val <= 127) {
                 return "`{$filed}` tinyint(4) DEFAULT '0' ,";
+            } elseif (mb_strlen($val) > 11) {
+                return "`{$filed}` bigint(20) DEFAULT '0' ,";
             } else {
                 return "`{$filed}` int(11) DEFAULT '0' ,";
             }
@@ -70,7 +72,11 @@ class Mysql extends Drive
             $e = mb_strlen($f) <= 2 ? 2 : mb_strlen($f);
             return "`{$filed}` double({$b},{$e}) DEFAULT '0' ,";
         }
-        if (mb_strlen($val) <= 50) {
+        $len = mb_strlen($val);
+        if (strtotime($val) > strtotime('1970-01-02 00:00:00') && $len > 11 && $len <= 19) {
+            return "`{$filed}` timestamp NULL DEFAULT NULL ,";
+        }
+        if ($len <= 50) {
             return " `{$filed}` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '' ,";
         }
         return " `{$filed}` varchar(255) COLLATE utf8mb4_bin NOT NULL DEFAULT '' ,";
@@ -78,7 +84,7 @@ class Mysql extends Drive
 
     /**
      * @param string $table
-     * @param array  $data
+     * @param array $data
      * @return bool
      */
     public function createTable($table, $data)
