@@ -3,13 +3,11 @@
 
 namespace Openphp\ElasticTable\Drive;
 
-
 use Openphp\ElasticTable\Drive;
 use PDO;
 
 class Mysql extends Drive
 {
-
     /**
      * @var array
      */
@@ -38,7 +36,7 @@ class Mysql extends Drive
      * @param string $table
      * @return bool|mixed
      */
-    public function exist($table)
+    public function exist(string $table)
     {
         $stmt = $this->connect()->prepare("select * from information_schema.TABLES WHERE TABLE_NAME = :table AND TABLE_SCHEMA = :dbname ;");
         $stmt->execute(['table' => $table, 'dbname' => $this->config['dbname']]);
@@ -64,14 +62,20 @@ class Mysql extends Drive
             } else {
                 return "`{$filed}` int(11) DEFAULT '0' ,";
             }
-        } elseif ($type == 'boolean') {
+        }
+        if ($type == 'boolean') {
             return "`{$filed}` tinyint(4) DEFAULT '0' COMMENT '1 ture 0 false' ,";
-        } elseif ($type == 'double') {
+        }
+        if ($type == 'double') {
             [$i, $f] = explode('.', (string)$val);
             $b = mb_strlen($i) <= 10 ? 10 : mb_strlen($i);
             $e = mb_strlen($f) <= 2 ? 2 : mb_strlen($f);
             return "`{$filed}` double({$b},{$e}) DEFAULT '0' ,";
         }
+        if ($type == 'array') {
+            return "`{$filed}` json DEFAULT NULL,";
+        }
+
         $len = mb_strlen($val);
         if (strtotime($val) > strtotime('1970-01-02 00:00:00') && $len > 11 && $len <= 19) {
             return "`{$filed}` timestamp NULL DEFAULT NULL ,";
@@ -87,7 +91,7 @@ class Mysql extends Drive
      * @param array $data
      * @return bool
      */
-    public function createTable($table, $data)
+    public function createTable(string $table, array $data)
     {
         $sql = "CREATE TABLE `{$table}` (";
         $sql .= '`id` int(11) NOT NULL AUTO_INCREMENT,';
@@ -107,11 +111,11 @@ class Mysql extends Drive
     }
 
     /**
-     * @param $table
-     * @param $filedVals
+     * @param string $table
+     * @param array $filedVals
      * @return bool
      */
-    public function addFiledVals($table, array $filedVals)
+    public function addFiledVals(string $table, array $filedVals)
     {
         $sql = 'ALTER TABLE ' . $table;
         foreach ($filedVals as $filed => $val) {
@@ -125,10 +129,10 @@ class Mysql extends Drive
     }
 
     /**
-     * @param $table
+     * @param string $table
      * @return array
      */
-    public function tableFields($table)
+    public function tableFields(string $table)
     {
         $stmt = $this->connect()->prepare("SHOW FULL COLUMNS FROM {$table}");
         $stmt->execute();

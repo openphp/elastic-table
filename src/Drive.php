@@ -21,7 +21,7 @@ abstract class Drive
      * @param array $config
      * @param array $option
      */
-    public function __construct($config = [], $option = [])
+    public function __construct(array $config = [], array $option = [])
     {
         $this->config = array_merge($this->config, $config);
         $this->option = array_merge($this->option, $option);
@@ -38,29 +38,28 @@ abstract class Drive
      * @param string $table
      * @return mixed
      */
-    abstract public function exist($table);
+    abstract public function exist(string $table);
 
     /**
      * 创建数据表
      * @param string $table
-     * @param array  $data
+     * @param array $data
      * @return mixed
      */
-    abstract public function createTable($table, $data);
+    abstract public function createTable(string $table, array $data);
 
     /**
      * 添加字段
      * @param string $table
-     * @param array  $filedVals
+     * @param array $filedVals
      * @return mixed
      */
-    abstract public function addFiledVals($table, array $filedVals);
-
+    abstract public function addFiledVals(string $table, array $filedVals);
 
     /**
      * 表格字段
-     * @param $table
+     * @param string $table
      * @return mixed
      */
-    abstract public function tableFields($table);
+    abstract public function tableFields(string $table);
 }

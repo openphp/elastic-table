@@ -13,11 +13,17 @@ class ElasticTable
     /**
      * @var array
      */
-    protected $data = [];
+    protected $datas = [];
     /**
      * @var Drive
      */
     protected $drive;
+
+    /**
+     * 忽略数组中的数组
+     * @var bool
+     */
+    protected $continueArray = true;
 
     /**
      * ElasticTable constructor.
@@ -54,51 +60,31 @@ class ElasticTable
      */
     public function datas(array $datas)
     {
-        $this->data = $datas;
+        $this->datas = $datas;
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getDataFiledVal()
-    {
-        $data      = $this->data;
-        $filed_len = [];
-        foreach ($data as $i => $datum) {
-            foreach ($datum as $filed => $val) {
-                if (is_array($val)) {
-                    continue;
-                }
-                $filed_len[$filed][$i] = mb_strlen($val);
-            }
-        }
-        $fileds = [];
-        foreach ($filed_len as $f => $item) {
-            $index      = array_search(max($item), $item);
-            $fileds[$f] = $data[$index][$f];
-        }
-        return $fileds;
-    }
 
     /**
      * @return bool|mixed
      */
     public function check()
     {
-        $ret          = true;
-        $dataFiledVal = $this->getDataFiledVal();
-        $fileds       = array_keys($dataFiledVal);
+        $ret           = true;
+        $datasFiledVal = Resault::datasFiledVal($this->datas, $this->continueArray);
+        $dataFileds    = array_keys($datasFiledVal);
         if (!$this->drive->exist($this->table)) {
-            $ret = $this->drive->createTable($this->table, $dataFiledVal);
+            $ret = $this->drive->createTable($this->table, $datasFiledVal);
         }
-        $tableFileds = $this->drive->tableFields($this->table);
-        if ($diff = array_diff($fileds, $tableFileds)) {
-            $alertFileds = [];
-            foreach ($diff as $f) {
-                $alertFileds[$f] = $dataFiledVal[$f];
+        $dbFileds = $this->drive->tableFields($this->table);
+        if ($diff = array_diff($dataFileds, $dbFileds)) {
+            $filedVals = [];
+            foreach ($diff as $filed) {
+                $filedVals[$filed] = $datasFiledVal[$filed];
             }
-            $ret = $this->drive->addFiledVals($this->table, $alertFileds);
+            if ($filedVals) {
+                $ret = $this->drive->addFiledVals($this->table, $filedVals);
+            }
         }
         return $ret;
     }

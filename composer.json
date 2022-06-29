@@ -17,7 +17,8 @@
   "require": {
     "php": ">7.2",
     "ext-pdo": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-json": "*"
   },
   "scripts": {
     "fresh": [
