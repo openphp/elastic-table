@@ -6,20 +6,47 @@ class Resault
 {
 
     /**
-     * @param array $array
-     * @param string $colum
+     * 将数据结构重新生成，方便快速建表和更新表结构
+     * @param array $datas
+     * @return array[]
+     */
+    public static function datasTable(array $datas)
+    {
+        $master = [];
+        $child  = [];
+        foreach ($datas as $k => $data) {
+            foreach ($data as $f => $val) {
+                if (!is_array($val)) {
+                    $master[$k][$f] = $val;
+                } else {
+                    $child[$f] = [];
+                }
+            }
+        }
+        array_walk($child, function (&$v, $k) use (&$datas) {
+            $v = array_column($datas, $k);
+        });
+        return array_merge(['master' => $master], $child);
+    }
+
+    /**
+     * 根据datasTable生成函数，存在master表与其他表存在一对多的关系的数据进行组合
+     *  方便快速建表和更新表结构
+     * @param array $filedVals
      * @return array
      */
-    public static function column(array $array, string $colum)
+    public static function moreDimensionFiledVals(array $filedVals)
     {
         $newArray = [];
-        foreach (array_column($array, $colum) as $v) {
+        foreach ($filedVals as $v) {
             $newArray = array_merge($newArray, $v);
         }
         return $newArray;
     }
 
+
     /**
+     * 生成字段和数据对应多数据
      * @param $data
      * @param bool $continueArray
      * @return void
@@ -39,6 +66,7 @@ class Resault
     }
 
     /**
+     * 二维数据进行重新处理
      * @param array $datas
      * @param bool $continueArray
      * @return array
