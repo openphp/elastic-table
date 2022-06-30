@@ -47,7 +47,7 @@ class Resault
 
     /**
      * 生成字段和数据对应多数据
-     * @param $data
+     * @param      $data
      * @param bool $continueArray
      * @return void
      */
@@ -68,7 +68,7 @@ class Resault
     /**
      * 二维数据进行重新处理
      * @param array $datas
-     * @param bool $continueArray
+     * @param bool  $continueArray
      * @return array
      */
     public static function datasFiledVal(array $datas, $continueArray = true)

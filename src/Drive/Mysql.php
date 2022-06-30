@@ -94,14 +94,10 @@ class Mysql extends Drive
         if ($type == 'array') {
             return "`{$filed}` json DEFAULT NULL,";
         }
-
-        $len = mb_strlen($val);
-        if (strtotime($val) > strtotime('1970-01-02 00:00:00') && $len > 11 && $len <= 19) {
-            return "`{$filed}` timestamp NULL DEFAULT NULL ,";
-        }
-        if ($len <= 50) {
-            return " `{$filed}` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '' ,";
-        }
+//        $len = mb_strlen($val);
+//        if (strtotime($val) > strtotime('1970-01-02 00:00:00') && $len > 11 && $len <= 19) {
+//            return "`{$filed}` timestamp NULL DEFAULT NULL ,";
+//        }
         return " `{$filed}` varchar(255) COLLATE utf8mb4_bin NOT NULL DEFAULT '' ,";
     }
 
