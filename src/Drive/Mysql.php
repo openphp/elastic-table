@@ -81,9 +81,14 @@ class Mysql extends Drive
             return "`{$filed}` tinyint(4) DEFAULT '0' COMMENT '1 ture 0 false' ,";
         }
         if ($type == 'double') {
-            [$i, $f] = explode('.', (string)$val);
-            $b = mb_strlen($i) <= 10 ? 10 : mb_strlen($i);
-            $e = mb_strlen($f) <= 2 ? 2 : mb_strlen($f);
+            $val = explode('.', (string)$val);
+            $i   = $val[0] ?? 0;
+            $f   = $val[1] ?? 0;
+            $b   = mb_strlen($i) <= 10 ? 10 : mb_strlen($i);
+            $e   = mb_strlen($f) <= 2 ? 2 : mb_strlen($f);
+            if ($e >= $b) {
+                $b = $e + 1;
+            }
             return "`{$filed}` double({$b},{$e}) DEFAULT '0' ,";
         }
         if ($type == 'array') {
@@ -102,7 +107,7 @@ class Mysql extends Drive
 
     /**
      * @param string $table
-     * @param array $data
+     * @param array  $data
      * @return bool
      */
     public function createTable(string $table, array $data)
@@ -126,7 +131,7 @@ class Mysql extends Drive
 
     /**
      * @param string $table
-     * @param array $filedVals
+     * @param array  $filedVals
      * @return bool
      */
     public function addFiledVals(string $table, array $filedVals)
